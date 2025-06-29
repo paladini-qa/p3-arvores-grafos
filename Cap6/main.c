@@ -80,6 +80,128 @@ void *alocaInfoVertice(void *info)
     return pv;
 }
 
+/* ---------------------------------------- */
+// Função para obter nome da cor baseado no número
+const char *obterNomeCor(int cor)
+{
+    switch (cor)
+    {
+    case 1:
+        return "Vermelho";
+    case 2:
+        return "Verde";
+    case 3:
+        return "Azul";
+    case 4:
+        return "Amarelo";
+    case 5:
+        return "Magenta";
+    case 6:
+        return "Ciano";
+    case 7:
+        return "Branco";
+    case 8:
+        return "Roxo";
+    case 9:
+        return "Laranja";
+    case 10:
+        return "Rosa";
+    default:
+        return "Indefinida";
+    }
+}
+
+/* ---------------------------------------- */
+// Função para obter código ANSI da cor
+const char *obterCodigoCorAnsi(int cor)
+{
+    switch (cor)
+    {
+    case 1:
+        return VERMELHO;
+    case 2:
+        return VERDE;
+    case 3:
+        return AZUL;
+    case 4:
+        return AMARELO;
+    case 5:
+        return MAGENTA;
+    case 6:
+        return CIANO;
+    case 7:
+        return BRANCO;
+    case 8:
+        return "\x1b[35m"; // Roxo
+    case 9:
+        return "\x1b[33m"; // Laranja (amarelo intenso)
+    case 10:
+        return "\x1b[95m"; // Rosa
+    default:
+        return RESET;
+    }
+}
+
+/* ---------------------------------------- */
+// Função para imprimir vértice com sua cor
+void imprimeVerticeColorido(void *info1)
+{
+    pVertice v = (pVertice)info1;
+    int cor = obterCorVertice(v);
+
+    if (cor > 0)
+    {
+        printf("\n%s%sVertice %d%s - Cor: %s%s%s%s - Adjacencias [",
+               NEGRITO, obterCodigoCorAnsi(cor), *((int *)v->info), RESET,
+               NEGRITO, obterCodigoCorAnsi(cor), obterNomeCor(cor), RESET);
+    }
+    else
+    {
+        printf("\nVertice %d - Cor: %sNão colorido%s - Adjacencias [",
+               *((int *)v->info), VERMELHO, RESET);
+    }
+
+    if (v->listaAdjacencias && v->listaAdjacencias->quantidade > 0)
+    {
+        pNoh atual = v->listaAdjacencias->primeiro;
+        while (atual != NULL)
+        {
+            pVertice adj = (pVertice)atual->info;
+            int corAdj = obterCorVertice(adj);
+
+            if (corAdj > 0)
+            {
+                printf("%s%d%s", obterCodigoCorAnsi(corAdj), *((int *)adj->info), RESET);
+            }
+            else
+            {
+                printf("%d", *((int *)adj->info));
+            }
+
+            if (atual->prox != NULL)
+                printf(" - ");
+            atual = atual->prox;
+        }
+    }
+    printf("]\n");
+}
+
+/* ---------------------------------------- */
+// Função para mostrar legenda das cores
+void mostrarLegendaCores(int numCores)
+{
+    printf("\n%s+-- LEGENDA DE CORES --+%s\n", CIANO, RESET);
+
+    for (int i = 1; i <= numCores; i++)
+    {
+        printf("  %sCor %d%s: %s%s%s%s\n",
+               NEGRITO, i, RESET,
+               NEGRITO, obterCodigoCorAnsi(i), obterNomeCor(i), RESET);
+    }
+
+    printf("%s+---------------------+%s\n", CIANO, RESET);
+}
+
 /* ----------------------------- */
 void criarGrafoHamiltoniano(pDGrafo grafo)
 {
@@ -641,19 +763,53 @@ int main()
             break;
 
         case 14:
-            printf("\n=== COLORACAO DO GRAFO ===\n");
-            int numCores = coloracao(grafo, comparaVertice);
-            if (numCores > 0)
+            printf("\033[2J\033[H");
+            imprimirTituloDecorado("COLORACAO DO GRAFO");
+
+            if (grafo != NULL && grafo->listaVertices != NULL && grafo->listaVertices->quantidade > 0)
             {
-                printf("+ Coloracao realizada com sucesso!\n");
-                printf("  Numero minimo de cores necessarias: %d\n", numCores);
-                printf("  (Vertices adjacentes tem cores diferentes)\n");
+                printf("\n");
+                imprimirMensagemInfo("Executando algoritmo de coloracao...");
+
+                int numCores = coloracao(grafo, comparaVertice);
+
+                if (numCores > 0)
+                {
+                    imprimirMensagemSucesso("Coloracao realizada com sucesso!");
+                    printf("  %s> %sNumero minimo de cores necessarias: %s%d%s\n",
+                           AZUL, RESET, NEGRITO, numCores, RESET);
+                    printf("  %s> %sVertices adjacentes possuem cores diferentes%s\n",
+                           AZUL, RESET, RESET);
+
+                    // Mostrar legenda das cores
+                    mostrarLegendaCores(numCores);
+
+                    printf("\n");
+                    imprimirSeparadorSecao("VISUALIZACAO DO GRAFO COLORIDO");
+
+                    // Mostrar o grafo com cores
+                    if (grafo->listaVertices->quantidade > 0)
+                    {
+                        mostrarGrafo(grafo, imprimeVerticeColorido);
+                    }
+
+                    printf("\n");
+                    imprimirMensagemInfo("Coloracao valida - nenhum vertice adjacente tem a mesma cor!");
+                }
+                else
+                {
+                    imprimirMensagemErro("Nao foi possivel colorir o grafo!");
+                    imprimirMensagemInfo("Verifique se o grafo possui estrutura valida");
+                }
             }
             else
             {
-                printf("- Nao foi possivel colorir o grafo (grafo vazio?)\n");
+                imprimirMensagemErro("Grafo vazio ou nao inicializado!");
+                imprimirMensagemInfo("Use a opcao 0 para criar um grafo exemplo");
+                imprimirMensagemInfo("Ou use a opcao 1 para adicionar vertices manualmente");
             }
-            getch();
+
+            aguardarTecla();
             break;
 
         case 10:
