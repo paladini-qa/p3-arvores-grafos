@@ -31,7 +31,6 @@
 #include "Operacoes/12_existeCaminhoEuleriano.h"
 #include "Operacoes/15_grafoConexo.h"
 #include "Operacoes/16_coloracao.h"
-#include "Operacoes/17_grafoBipartido.h"
 /*
 #include "Operacoes/13_subGrafo.h"
 */

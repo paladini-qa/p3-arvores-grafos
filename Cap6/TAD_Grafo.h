@@ -43,10 +43,7 @@ int        ehSubGrafo(pDGrafo, pDGrafo, FuncaoComparacao);
 // de desconexo.
 int        grafoConexo(pDGrafo, FuncaoComparacao);
 
-// Um grafo G � bipartido se seus v�rtices podem ser separados
-// em dois conjuntos independentes de tal forma que todas
-// arestas do grafo conectam v�rtices de conjuntos distintos.
-int        grafoBipartido(pDGrafo, FuncaoComparacao);
+
 
 int        existeCaminhoHamiltoniano (pDGrafo, FuncaoComparacao);
 int        existeCaminhoEuleriano    (pDGrafo, FuncaoComparacao); // pontes de K�nigsberg

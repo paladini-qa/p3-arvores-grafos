@@ -342,7 +342,6 @@ int main(){
         imprimirOpcaoMenu(12, "Verificar Euleriano", "Caminho euleriano");
         imprimirOpcaoMenu(13, "Verificar Hamiltoniano", "Caminho hamiltoniano");
         imprimirOpcaoMenu(14, "Colorir Grafo", "Coloracao de vertices");
-        imprimirOpcaoMenu(15, "Verificar Bipartido", "Grafo bipartido");
         
         imprimirSeparadorSecao("SISTEMA");
         imprimirOpcaoMenu(10, "Sair", "Encerrar programa");
@@ -586,18 +585,6 @@ int main(){
                 printf("  (Vertices adjacentes tem cores diferentes)\n");
             } else {
                 printf("- Nao foi possivel colorir o grafo (grafo vazio?)\n");
-            }
-            getch();
-            break;
-
-        case 15 :
-            printf("\n=== VERIFICACAO: GRAFO BIPARTIDO ===\n");
-            if (grafoBipartido(grafo, comparaVertice)) {
-                printf("+ O grafo eh BIPARTIDO\n");
-                printf("  (Vertices podem ser divididos em dois conjuntos independentes)\n");
-            } else {
-                printf("- O grafo NAO eh bipartido\n");
-                printf("  (Nao pode ser dividido em dois conjuntos independentes)\n");
             }
             getch();
             break;

@@ -1,10 +1,7 @@
 #ifndef COLORACAO_H
 #define COLORACAO_H
 
-
-
 #define MAX_CORES 100
-
 
 typedef struct {
     void* verticeInfo;
